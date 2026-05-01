@@ -25,5 +25,13 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Rhythm Game")
 clock = pygame.time.Clock()
 
+font_large = pygame.font.SysFont("Arial", 40, bold=True)
+font_small = pygame.font.SysFont("Arial", 24)
+font_msg = pygame.font.SysFont("Arial", 50, bold=True)
+
+KEYS = [pygame.K_z, pygame.K_x, pygame.K_c, pygame.K_v, pygame.K_b, pygame.K_n, pygame.K_m]
+LANE_KEYS = ['Z', 'X', 'C', 'V', 'B', 'N', 'M']
+key_labels = [font_large.render(key, True, WHITE) for key in LANE_KEYS]
+
 
 
