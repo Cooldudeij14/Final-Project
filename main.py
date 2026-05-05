@@ -1,7 +1,12 @@
+
+
 import pygame
 import time
 
 pygame.init()
+pygame.mixer.init()
+pygame.mixer.music.load("c:/Users/Ishaan.Joshi28/.vscode/FInal/song4.mp3")
+
 
 song_chart = []
 
@@ -16,6 +21,8 @@ NOTE_SIZE = 30
 LANE_X = (SCREEN_WIDTH - (7 * LANE_WIDTH)) // 2
 HIT_Y = 550
 HIT_WINDOW = 50
+
+LEAD_TIME = ((HIT_Y + NOTE_SIZE) * 1000 / (NOTE_SPEED * FPS))
 #colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -77,6 +84,57 @@ while running:
                 clicked_lane = KEYS.index(event.key)
                 flash[clicked_lane] = 6
                 hit_detected = False
+
+                for note in notes[:]:
+                    if note.lane == clicked_lane and abs(note.y - HIT_Y) < HIT_WINDOW:
+                        notes.remove(note)
+                        hit_detected = True
+                        score += 25 * multiplier
+                        streak += 1
+                        if streak % 10 == 0:
+                            multiplier += 1
+                        message = "Perfect!"
+                        message_color = (0, 255, 0)
+                        message_timer = pygame.time.get_ticks()
+                        break
+
+                if not hit_detected:
+
+                    message = "Miss!"
+                    message_color = (255, 0, 0)
+                    message_timer = pygame.time.get_ticks()
+                    streak = 0
+                    multiplier = 1
+                    score -= 10
+
+    if game_started:
+        current_time = pygame.mixer.music.get_pos()
+
+        while song_chart and current_time >= (song_chart[0][0] - 1200 - LEAD_TIME):
+            target_hit_time, lane = song_chart.pop(0)
+            notes.append(Note(lane, target_hit_time - 1200, LANE_WIDTH, NOTE_SIZE, NOTE_COLORS, LANE_X, HIT_Y, NOTE_SPEED, SPEED_MULTIPLIER, FPS, WHITE))
+
+        for note in notes[:]:
+            note.update(current_time)
+            if note.y > SCREEN_HEIGHT:
+                notes.remove(note)
+                score -= 10
+                streak = 0
+                feedback_msg = "MISS!"
+                feedback_color = (255, 0, 0)
+                feedback_timer = 20
+
+    screen.fill(BLACK)
+
+    pygame.draw.rect(screen, PURPLE, (LANE_X, HIT_Y, LANE_WIDTH * 7, 60))
+
+    for i in range(7):
+        lx = LANE_X + (i * LANE_WIDTH)
+        if flash[i] > 0:
+            screen.blit(flash, (lx, 0))
+            flash[i] -= 1
+        pygame.draw.rect(screen, WHITE, (lx + 5, HIT_Y, LANE_WIDTH - 10, 60), 3)
+
             
 
 
