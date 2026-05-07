@@ -8,7 +8,19 @@ pygame.mixer.init()
 pygame.mixer.music.load("c:/Users/Ishaan.Joshi28/.vscode/FInal/song4.mp3")
 
 
-song_chart = []
+song_chart = [(1465, 0), (1637, 0), (1818, 0), (1996, 1), (2353, 1), (2534, 1),
+    (2905, 2), (3087, 2), (3265, 3), (3450, 3), (3814, 3), (3997, 4),
+    (4361, 5), (4541, 4), (4721, 5), (4903, 6), (5268, 5), (5452, 6),
+    (5630, 6), (5806, 6), (6534, 1), (6909, 3), (7087, 5), (7276, 4),
+    (7450, 3), (7634, 5), (7810, 4), (7997, 3), (8352, 4), (8534, 3),
+    (8727, 6), (9090, 5), (9456, 6), (9636, 0), (9823, 0), (10001, 0),
+    (10181, 0), (10365, 0), (10545, 0), (10721, 0), (10910, 6), (11087, 1),
+    (11270, 0), (11621, 0), (11634, 6), (11999, 5), (12363, 5), (12732, 5),
+    (12906, 5), (13092, 4), (13276, 3), (13452, 5), (13636, 4), (13819, 3),
+    (14174, 4), (14356, 3), (14543, 6), (14909, 5), (15272, 6), (15624, 1),
+    (15808, 1), (15990, 2), (16179, 1), (16368, 0), (16558, 0), (16724, 6),
+    (16918, 0), (17098, 0), (17274, 1), (17454, 0), (17814, 6), (18181, 6),
+    (18545, 5), (18724, 5), (18903, 4), (19088, 3), (19268, 5), (19452, 4),]
 
 # creating a map and set variables
 SCREEN_WIDTH = 600
@@ -134,6 +146,26 @@ while running:
             screen.blit(flash, (lx, 0))
             flash[i] -= 1
         pygame.draw.rect(screen, WHITE, (lx + 5, HIT_Y, LANE_WIDTH - 10, 60), 3)
+
+    for note in notes:
+        note.draw(screen)
+
+    screen.blit(font_small.render(f"SCORE: {score}", True, WHITE), (20, 20))
+    screen.blit(font_small.render(f"STREAK: {streak}", True, WHITE), (20, 50))
+    screen.blit(font_small.render(f"MULTIPLIER: {multiplier:.1f}x", True, WHITE), (20, 80))
+    screen.blit(font_small.render(f"HIGH SCORE: {max(score, high_score)}", True, (255, 215, 0)), (SCREEN_WIDTH - 250, 20))
+
+    if score > high_score:
+        high_score = score
+    
+    if feedback_timer > 0:
+        msg_surf = font_msg.render(feedback_msg, True, feedback_color)
+        screen.blit(msg_surf, ((SCREEN_WIDTH - msg_surf.get_width()) // 2, SCREEN_HEIGHT // 2))
+        feedback_timer -= 1
+
+    if not game_started:
+        pygame.draw.rect(screen, WHITE, button_rect, border_radius=10)
+        screen.blit(button_text, button_text.get_rect(center=button_rect.center))
 
             
 
